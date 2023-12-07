@@ -91,4 +91,35 @@ class HousesApiTest extends TestCase
             ->assertJsonPath('data.0.price', number_format($house1->price, 2, '.', ''))
             ->assertJsonMissing(['price' => number_format($house2->price, 2, '.', '')]);
     }
+
+    /**
+     * Test house creation fails with invalid data.
+     *
+     * @return void
+     */
+    public function testHouseCreationFailsWithInvalidData(): void
+    {
+        $invalidFilterData = [
+            'min_price' => 'abc',
+            'max_price' => 'def',
+            'bedrooms' => 'three',
+            'bathrooms' => 'one',
+            'storeys' => 'one',
+            'garages' => 'one',
+        ];
+
+        $filters = http_build_query(['filters' => $invalidFilterData]);
+
+        $response = $this->get('/api/houses?' . $filters, ['Accept' => 'application/json']);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors([
+                'filters.min_price',
+                'filters.max_price',
+                'filters.bedrooms',
+                'filters.bathrooms',
+                'filters.storeys',
+                'filters.garages'
+            ]);
+    }
 }
