@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Repositories\HousesRepository;
 use App\Http\Requests\HouseFilterRequest;
-use Illuminate\Http\JsonResponse;
+use App\Http\Resources\HouseResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class HousesController extends Controller
 {
@@ -14,14 +15,14 @@ class HousesController extends Controller
      *
      * @param HousesRepository $repository
      * @param HouseFilterRequest $request
-     * @return JsonResponse
+     * @return AnonymousResourceCollection
      */
-    public function index(HousesRepository $repository, HouseFilterRequest $request): JsonResponse
+    public function index(HousesRepository $repository, HouseFilterRequest $request): AnonymousResourceCollection
     {
         $filters = $request->input('filters', []);
 
         $houses = $repository->getHousesByFilter($filters);
 
-        return response()->json($houses);
+        return HouseResource::collection($houses);
     }
 }

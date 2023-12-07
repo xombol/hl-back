@@ -17,4 +17,8 @@ use Illuminate\Database\Eloquent\Model;
 class House extends Model
 {
     use HasFactory;
+
+    protected $hidden = [
+        'updated_at',
+    ];
 }

@@ -4,12 +4,12 @@ namespace App\Http\Repositories;
 
 use App\Models\House;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 
 class HousesRepository
 {
     /**
+     * Get houses by Filter
+     *
      * @param mixed $filters
      * @return LengthAwarePaginator
      */
@@ -31,10 +31,10 @@ class HousesRepository
             ->when($filters["garages"] ?? false, function ($query, $value) {
                 $query->where('garages', $value);
             })
-            ->when($filters["min_price"] ?? false, function ($query, $value) {
+            ->when($filters["min_price"] ?? null, function ($query, $value) {
                 $query->where('price', '>=', $value);
             })
-            ->when($filters["max_price"] ?? false, function ($query, $value) {
+            ->when($filters["max_price"] ?? null, function ($query, $value) {
                 $query->where('price', '<=', $value);
             })
             ->orderByDesc('id')
