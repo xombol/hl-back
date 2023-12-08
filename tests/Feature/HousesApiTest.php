@@ -110,7 +110,7 @@ class HousesApiTest extends TestCase
 
         $filters = http_build_query(['filters' => $invalidFilterData]);
 
-        $response = $this->get('/api/houses?' . $filters, ['Accept' => 'application/json']);
+        $response = $this->getJson('/api/houses?' . $filters);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors([
@@ -122,4 +122,24 @@ class HousesApiTest extends TestCase
                 'filters.garages'
             ]);
     }
+
+
+    /**
+     * Test house creation fails with invalid data.
+     *
+     * @return void
+     */
+    public function testHouseCreationFailsWithInvalidDataOther(): void
+    {
+        $invalidFilterData = [
+            'car' => 'abc',
+        ];
+
+        $filters = http_build_query(['filters' => $invalidFilterData]);
+
+        $response = $this->getJson('/api/houses?' . $filters);
+
+        $response->assertStatus(422);
+    }
+
 }
